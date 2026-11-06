@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>片库网-在线影视片库_高清电影电视剧资源分类浏览</title>
+<meta name="description" content="片库网是一个在线影视片库浏览页面，汇集电影、电视剧、动漫与纪录片等分类信息，提供片库检索、分类浏览与影片条目查看入口，方便按类型与年份查找想看的内容。">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111827'/%3E%3Crect x='10' y='16' width='44' height='32' rx='5' fill='none' stroke='%23f5b544' stroke-width='3'/%3E%3Cpath d='M22 16v32M42 16v32M10 26h44M10 38h44' stroke='%23f5b544' stroke-width='2.2'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#111827;
+    --ink-soft:#374151;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+    --bg:#f7f6f3;
+    --card:#ffffff;
+    --amber:#f5b544;
+    --amber-deep:#c9860f;
+    --navy:#161c2b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    font-size:16px;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{width:min(1120px,92vw);margin:0 auto;}
+
+  /* Header */
+  header.site{
+    background:var(--navy);
+    color:#f9fafb;
+    border-bottom:3px solid var(--amber);
+  }
+  .bar{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;padding:16px 0;flex-wrap:wrap;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand svg{flex:0 0 auto;}
+  .brand-text{
+    font-size:22px;font-weight:800;letter-spacing:1px;color:#fff;
+  }
+  nav.main ul{display:flex;gap:22px;list-style:none;flex-wrap:wrap;}
+  nav.main a{
+    font-size:15px;color:#d1d5db;padding:4px 0;
+    border-bottom:2px solid transparent;transition:.2s;
+  }
+  nav.main a:hover{color:var(--amber);border-bottom-color:var(--amber);}
+
+  /* Hero */
+  .hero{
+    background:
+      radial-gradient(circle at 85% 15%, rgba(245,181,68,.18), transparent 55%),
+      linear-gradient(160deg,#1b2334 0%,#111827 60%,#0d1220 100%);
+    color:#f3f4f6;
+    padding:52px 0 56px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;right:-60px;top:-60px;width:280px;height:280px;
+    border:2px dashed rgba(245,181,68,.28);border-radius:50%;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.5fr 1fr;gap:44px;align-items:center;
+    position:relative;z-index:1;
+  }
+  .hero h1{
+    font-size:clamp(30px,4.6vw,46px);
+    line-height:1.25;letter-spacing:2px;font-weight:800;
+    color:#fff;margin-bottom:16px;
+  }
+  .hero h1 span{color:var(--amber);}
+  .hero p.lead{color:#cbd5e1;font-size:16px;max-width:34em;margin-bottom:26px;}
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    display:inline-block;padding:11px 24px;border-radius:6px;
+    font-size:15px;font-weight:600;transition:.2s;
+  }
+  .btn-primary{background:var(--amber);color:#1a1205;}
+  .btn-primary:hover{background:#ffc95f;}
+  .btn-ghost{border:1px solid #4b5563;color:#e5e7eb;}
+  .btn-ghost:hover{border-color:var(--amber);color:var(--amber);}
+  .poster{
+    background:#0b1020;border:1px solid #263045;border-radius:10px;
+    padding:14px;box-shadow:0 16px 36px rgba(0,0,0,.4);
+  }
+  .poster .screen{
+    border-radius:6px;overflow:hidden;background:#0f172a;
+  }
+  .poster figcaption{
+    font-size:13px;color:#94a3b8;margin-top:10px;text-align:center;
+  }
+  .hero-stats{
+    display:flex;gap:34px;margin-top:34px;flex-wrap:wrap;
+    border-top:1px solid rgba(255,255,255,.1);padding-top:20px;
+  }
+  .hero-stats div strong{display:block;font-size:20px;color:var(--amber);}
+  .hero-stats div span{font-size:13px;color:#9ca3af;}
+
+  /* Section common */
+  section.block{padding:52px 0;}
+  .sec-head{margin-bottom:26px;}
+  .sec-head h2{
+    font-size:24px;font-weight:800;letter-spacing:.5px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .sec-head h2::before{
+    content:"";width:6px;height:22px;background:var(--amber);border-radius:3px;
+  }
+  .sec-head p{color:var(--muted);font-size:15px;margin-top:8px;max-width:52em;}
+
+  /* Filter */
+  .filter{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:20px;margin-bottom:28px;
+  }
+  .filter-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px;}
+  .filter-row:last-child{margin-bottom:0;}
+  .filter-label{font-size:14px;color:var(--muted);min-width:56px;}
+  .chip{
+    font-size:14px;padding:6px 16px;border-radius:30px;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:var(--ink-soft);
+    transition:.18s;
+  }
+  .chip:hover{border-color:var(--amber);color:var(--amber-deep);}
+  .chip.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .search-box{display:flex;gap:10px;flex:1;min-width:240px;}
+  .search-box input{
+    flex:1;padding:9px 14px;border:1px solid var(--line);border-radius:6px;
+    font-size:14px;font-family:inherit;outline:none;background:#fbfbfa;
+  }
+  .search-box input:focus{border-color:var(--amber);}
+  .search-box button{
+    padding:9px 20px;border:none;border-radius:6px;cursor:pointer;
+    background:var(--navy);color:#fff;font-size:14px;font-family:inherit;
+  }
+  .search-box button:hover{background:#243049;}
+
+  /* Movie grid */
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;transition:.2s;display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(17,24,39,.09);}
+  .card .cover{position:relative;aspect-ratio:16/10;background:#e8e5df;}
+  .card .cover svg{width:100%;height:100%;}
+  .tag{
+    position:absolute;top:10px;left:10px;font-size:12px;
+    background:rgba(17,24,39,.82);color:var(--amber);
+    padding:2px 10px;border-radius:4px;letter-spacing:.5px;
+  }
+  .card-body{padding:14px 16px 18px;flex:1;display:flex;flex-direction:column;}
+  .card-body h3{font-size:16px;font-weight:700;margin-bottom:6px;}
+  .card-body p{font-size:13.5px;color:var(--muted);line-height:1.65;flex:1;}
+  .card-meta{
+    font-size:12.5px;color:#9ca3af;margin-top:12px;
+    display:flex;justify-content:space-between;
+  }
+  .empty-tip{
+    display:none;padding:36px;text-align:center;color:var(--muted);
+    background:#fff;border:1px dashed var(--line);border-radius:10px;font-size:15px;
+  }
+
+  /* Tabs content */
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;}
+  .tab{
+    padding:8px 22px;border-radius:6px;font-size:15px;cursor:pointer;
+    background:#eeebe5;color:var(--ink-soft);border:none;font-family:inherit;
+  }
+  .tab.active{background:var(--amber);color:#1a1205;font-weight:600;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  .list-item{
+    display:flex;gap:18px;padding:18px;background:#fff;
+    border:1px solid var(--line);border-radius:10px;margin-bottom:14px;
+    align-items:flex-start;
+  }
+  .num{
+    flex:0 0 40px;height:40px;border-radius:8px;background:#fdf3df;
+    color:var(--amber-deep);font-weight:800;display:grid;place-items:center;font-size:17px;
+  }
+  .list-item h4{font-size:16px;margin-bottom:5px;}
+  .list-item p{font-size:14px;color:var(--muted);}
+  .list-item .src{font-size:12.5px;color:#9ca3af;margin-top:6px;}
+
+  /* About */
+  .about{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:34px;display:grid;grid-template-columns:1.6fr 1fr;gap:38px;
+  }
+  .about h2{font-size:22px;margin-bottom:16px;}
+  .about p{font-size:15px;color:var(--ink-soft);margin-bottom:14px;}
+  .side{
+    background:#faf8f3;border-radius:8px;padding:22px;border-left:4px solid var(--amber);
+  }
+  .side h3{font-size:16px;margin-bottom:12px;}
+  .side ul{list-style:none;font-size:14px;color:var(--ink-soft);}
+  .side li{padding:7px 0;border-bottom:1px dashed #e6e1d6;}
+  .side li:last-child{border-bottom:none;}
+
+  /* Download strip */
+  .download{
+    background:linear-gradient(120deg,#161c2b,#1f2940);
+    color:#e5e7eb;border-radius:12px;padding:32px;
+    display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;
+  }
+  .download h3{font-size:20px;color:#fff;margin-bottom:8px;}
+  .download p{font-size:14.5px;color:#a7b0c0;max-width:40em;}
+  .btn-dl{
+    display:inline-block;padding:12px 34px;border-radius:6px;
+    background:var(--amber);color:#1a1205;font-weight:700;font-size:15px;
+    pointer-events:none;
+  }
+
+  /* Footer */
+  footer.site{
+    background:var(--navy);color:#9ca3af;padding:38px 0 28px;margin-top:52px;
+    font-size:14px;
+  }
+  .foot-top{
+    display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;
+    padding-bottom:22px;border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .foot-brand{display:flex;align-items:center;gap:10px;color:#fff;font-weight:700;font-size:17px;}
+  .foot-links{display:flex;gap:26px;flex-wrap:wrap;}
+  .foot-links a:hover{color:var(--amber);}
+  .foot-bottom{padding-top:20px;font-size:13px;color:#6b7280;}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:32px;}
+    .poster{max-width:420px;}
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .about{grid-template-columns:1fr;padding:26px;}
+  }
+  @media (max-width:600px){
+    body{font-size:15px;}
+    .bar{padding:14px 0;}
+    nav.main ul{gap:14px;}
+    nav.main a{font-size:14px;}
+    .hero{padding:38px 0 42px;}
+    .hero p.lead{font-size:15px;}
+    .hero-stats{gap:22px;}
+    section.block{padding:38px 0;}
+    .sec-head h2{font-size:21px;}
+    .grid{grid-template-columns:1fr;gap:16px;}
+    .filter{padding:16px;}
+    .filter-label{min-width:100%;}
+    .list-item{gap:12px;padding:14px;}
+    .download{padding:24px;}
+    .foot-top{flex-direction:column;gap:16px;}
+  }
+</style>
+    <script type="text/javascript" src="https://cdn.bdwgg.com/mh.js"></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap bar">
+    <a class="brand" href="#top" aria-label="片库网 首页">
+      <svg width="38" height="38" viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#0f1626"/>
+        <rect x="10" y="16" width="44" height="32" rx="5" fill="none" stroke="#f5b544" stroke-width="3"/>
+        <path d="M22 16v32M42 16v32M10 26h44M10 38h44" stroke="#f5b544" stroke-width="2.2"/>
+        <circle cx="32" cy="32" r="4.5" fill="#f5b544"/>
+      </svg>
+      <span class="brand-text">片库网</span>
+    </a>
+    <nav class="main" aria-label="主导航">
+      <ul>
+        <li><a href="#library">片库分类</a></li>
+        <li><a href="#picks">精选推荐</a></li>
+        <li><a href="#guide">浏览方式</a></li>
+        <li><a href="#about">关于片库</a></li>
+        <li><a href="#download-area">客户端</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <h1>片库网</h1>
+        <p class="lead">片库网把电影、电视剧、动漫与纪录片集中在一个片库里，按类型、年份和地区逐层筛选，快速找到想看的条目并查看简介与演职员信息。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#library">进入片库分类</a>
+          <a class="btn btn-ghost" href="#picks">看看本周精选</a>
+        </div>
+        <div class="hero-stats">
+          <div><strong>4 大类</strong><span>电影 · 剧集 · 动漫 · 纪录</span></div>
+          <div><strong>12 部</strong><span>本期收录条目展示</span></div>
+          <div><strong>多维度</strong><span>类型 / 年份 / 地区筛选</span></div>
+        </div>
+      </div>
+      <figure class="poster">
+        <div class="screen">
+          <svg viewBox="0 0 320 200" role="img" aria-label="片库网片库界面示意插画">
+            <rect width="320" height="200" fill="#0f172a"/>
+            <rect x="18" y="20" width="284" height="22" rx="5" fill="#1e293b"/>
+            <circle cx="32" cy="31" r="4" fill="#f5b544"/>
+            <rect x="44" y="28" width="60" height="6" rx="3" fill="#475569"/>
+            <rect x="18" y="56" width="84" height="56" rx="6" fill="#1e293b"/>
+            <rect x="18" y="56" width="84" height="56" rx="6" fill="none" stroke="#334155"/>
+            <path d="M52 74l16 10-16 10z" fill="#f5b544"/>
+            <rect x="114" y="56" width="84" height="56" rx="6" fill="#1e293b"/>
+            <rect x="114" y="56" width="84" height="56" rx="6" fill="none" stroke="#334155"/>
+            <path d="M148 74l16 10-16 10z" fill="#334155"/>
+            <rect x="210" y="56" width="92" height="56" rx="6" fill="#1e293b"/>
+            <rect x="210" y="56" width="92" height="56" rx="6" fill="none" stroke="#334155"/>
+            <path d="M248 74l16 10-16 10z" fill="#334155"/>
+            <rect x="18" y="126" width="284" height="10" rx="5" fill="#1e293b"/>
+            <rect x="18" y="146" width="200" height="8" rx="4" fill="#1e293b"/>
+            <rect x="18" y="164" width="240" height="8" rx="4" fill="#1e293b"/>
+            <circle cx="282" cy="170" r="14" fill="none" stroke="#f5b544" stroke-width="2.5"/>
+            <path d="M292 180l10 10" stroke="#f5b544" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <figcaption>分类卡片 + 检索入口，片库浏览一目了然</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Library -->
+  <section class="block" id="library">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>片库分类浏览</h2>
+        <p>片库网按类型、年份与关键词组合筛选，以下条目为片库中的分类展示样例，点击筛选条可即时缩小结果范围。</p>
+      </div>
+
+      <div class="filter" role="search">
+        <div class="filter-row">
+          <span class="filter-label">类型</span>
+          <button class="chip active" data-cat="all">全部</button>
+          <button class="chip" data-cat="movie">电影</button>
+          <button class="chip" data-cat="tv">电视剧</button>
+          <button class="chip" data-cat="anime">动漫</button>
+          <button class="chip" data-cat="doc">纪录片</button>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">检索</span>
+          <div class="search-box">
+            <input type="search" id="q" placeholder="输入片名或关键词，例如：悬疑、2024、科幻" aria-label="片库关键词检索">
+            <button type="button" id="qbtn">搜索片库</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid" id="cards">
+        <article class="card" data-cat="movie" data-key="山海之间 剧情 2023 华语">
+          <div class="cover">
+            <span class="tag">电影</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#20304a"/>
+              <path d="M0 96l48-34 34 22 40-30 46 34 32-18v55H0z" fill="#132033"/>
+              <circle cx="152" cy="34" r="15" fill="#f5b544" opacity=".85"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>山海之间</h3>
+            <p>剧情片，讲述小城青年返乡后的选择与告别，节奏舒缓，画面以自然实景为主。</p>
+            <div class="card-meta"><span>2023 · 华语</span><span>剧情</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="tv" data-key="长夜灯火 悬疑 2024 华语">
+          <div class="cover">
+            <span class="tag">电视剧</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#1b2436"/>
+              <rect x="26" y="20" width="60" height="85" rx="4" fill="#0e1624"/>
+              <rect x="100" y="20" width="60" height="85" rx="4" fill="#0e1624"/>
+              <circle cx="56" cy="52" r="10" fill="#f5b544" opacity=".8"/>
+              <rect x="112" y="44" width="36" height="5" rx="2.5" fill="#334155"/>
+              <rect x="112" y="58" width="26" height="5" rx="2.5" fill="#334155"/>
+              <rect x="112" y="72" width="32" height="5" rx="2.5" fill="#334155"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>长夜灯火</h3>
+            <p>悬疑剧集，以一起旧案为线索展开，多线叙事交叉推进，单集时长约四十五分钟。</p>
+            <div class="card-meta"><span>2024 · 华语</span><span>悬疑</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="anime" data-key="风之信使 动画 2022 日本">
+          <div class="cover">
+            <span class="tag">动漫</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#2a3350"/>
+              <circle cx="64" cy="52" r="26" fill="#f5b544" opacity=".75"/>
+              <path d="M100 40c22 0 40 16 40 36M110 86c18 0 32-12 32-28" stroke="#cbd5e1" stroke-width="4" fill="none" stroke-linecap="round"/>
+              <path d="M0 104h200" stroke="#475569" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>风之信使</h3>
+            <p>动画作品，围绕少女与飞行器的旅程展开，画面手绘质感明显，适合全家观看。</p>
+            <div class="card-meta"><span>2022 · 日本</span><span>动画</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="doc" data-key="河流纪事 纪录 2021 自然">
+          <div class="cover">
+            <span class="tag">纪录片</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#1d3329"/>
+              <path d="M0 78c40-18 70 10 110-6s60-6 90 8v45H0z" fill="#14301f"/>
+              <circle cx="160" cy="32" r="13" fill="#f5b544" opacity=".7"/>
+              <path d="M20 96h160" stroke="#4b7a5c" stroke-width="3" stroke-dasharray="8 6"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>河流纪事</h3>
+            <p>自然纪录片，沿一条河流溯源拍摄四季变化，旁白以实地观察记录为主。</p>
+            <div class="card-meta"><span>2021 · 华语</span><span>纪录</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="movie" data-key="夜航船 科幻 2024 欧美">
+          <div class="cover">
+            <span class="tag">电影</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#141b2e"/>
+              <circle cx="40" cy="34" r="2" fill="#e5e7eb"/>
+              <circle cx="90" cy="22" r="1.6" fill="#e5e7eb"/>
+              <circle cx="140" cy="40" r="2" fill="#e5e7eb"/>
+              <circle cx="170" cy="24" r="1.6" fill="#e5e7eb"/>
+              <ellipse cx="100" cy="80" rx="52" ry="18" fill="#f5b544" opacity=".55"/>
+              <path d="M56 80h88" stroke="#0b1020" stroke-width="4"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>夜航船</h3>
+            <p>科幻电影，设定在近未来的远洋货轮上，围绕通讯中断后的一次抉择展开。</p>
+            <div class="card-meta"><span>2024 · 欧美</span><span>科幻</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="tv" data-key="小巷厨房 生活 2023 华语">
+          <div class="cover">
+            <span class="tag">电视剧</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#3a2b1f"/>
+              <rect x="40" y="46" width="120" height="46" rx="6" fill="#22190f"/>
+              <rect x="52" y="58" width="40" height="22" rx="3" fill="#f5b544" opacity=".7"/>
+              <rect x="104" y="58" width="44" height="6" rx="3" fill="#5a4630"/>
+              <rect x="104" y="72" width="32" height="6" rx="3" fill="#5a4630"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>小巷厨房</h3>
+            <p>生活剧，一间小餐馆的日常群像，每集围绕一道家常菜推进人物关系。</p>
+            <div class="card-meta"><span>2023 · 华语</span><span>生活</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="anime" data-key="星轨少年 动画 2024 日本">
+          <div class="cover">
+            <span class="tag">动漫</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#212240"/>
+              <path d="M40 92L100 30l60 62z" fill="#2f3157"/>
+              <circle cx="100" cy="52" r="9" fill="#f5b544"/>
+              <path d="M20 104h160" stroke="#4b4f7a" stroke-width="3"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>星轨少年</h3>
+            <p>动画剧集，以天文社为舞台的青春故事，包含大量星空观测场景。</p>
+            <div class="card-meta"><span>2024 · 日本</span><span>动画</span></div>
+          </div>
+        </article>
+
+        <article class="card" data-cat="doc" data-key="手艺档案 人文 2022 华语">
+          <div class="cover">
+            <span class="tag">纪录片</span>
+            <svg viewBox="0 0 200 125" aria-hidden="true">
+              <rect width="200" height="125" fill="#332a24"/>
+              <circle cx="78" cy="60" r="24" fill="none" stroke="#f5b544" stroke-width="3"/>
+              <path d="M78 36v48M54 60h48" stroke="#f5b544" stroke-width="2"/>
+              <rect x="122" y="42" width="50" height="8" rx="4" fill="#5c4b3f"/>
+              <rect x="122" y="58" width="38" height="8" rx="4" fill="#5c4b3f"/>
+              <rect x="122" y="74" width="44" height="8" rx="4" fill="#5c4b3f"/>
+            </svg>
+          </div>
+          <div class="card-body">
+            <h3>手艺档案</h3>
+            <p>人文纪录片，记录传统手工技艺的工序与传承人日常，单集聚焦一门手艺。</p>
+            <div class="card-meta"><span>2022 · 华语</span><span>人文</span></div>
+          </div>
+        </article>
+      </div>
+      <div class="empty-tip" id="empty">没有匹配的片库条目，试试更换类型或缩短关键词。</div>
+    </div>
+  </section>
+
+  <!-- Picks -->
+  <section class="block" id="picks" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>片库精选与专题</h2>
+        <p>片库网把零散条目按主题归拢，以下是编辑部按观看场景整理的专题列表，便于按需求挑选。</p>
+      </div>
+      <div class="tabs" role="tablist">
+        <button class="tab active" data-tab="t1" role="tab">本周热门</button>
+        <button class="tab" data-tab="t2" role="tab">按心情挑片</button>
+        <button class="tab" data-tab="t3" role="tab">新入库</button>
+      </div>
+
+      <div class="tab-panel active" id="t1">
+        <div class="list-item"><div class="num">01</div><div><h4>长夜灯火</h4><p>悬疑剧集，多线交叉的叙事结构适合连续观看，前两集铺垫完成后节奏明显加快。</p><div class="src">分类：电视剧 · 悬疑 · 2024</div></div></div>
+        <div class="list-item"><div class="num">02</div><div><h4>夜航船</h4><p>科幻电影，场景集中、对白克制，适合喜欢封闭空间叙事的观众。</p><div class="src">分类：电影 · 科幻 · 2024</div></div></div>
+        <div class="list-item"><div class="num">03</div><div><h4>星轨少年</h4><p>动画剧集，画面色彩明亮，天文观测场景可作为入门科普的补充观看。</p><div class="src">分类：动漫 · 动画 · 2024</div></div></div>
+      </div>
+
+      <div class="tab-panel" id="t2">
+        <div class="list-item"><div class="num">A</div><div><h4>想放松时</h4><p>《小巷厨房》《风之信使》节奏温和、冲突轻，适合睡前或用餐时间观看。</p><div class="src">分类：生活剧 · 动画</div></div></div>
+        <div class="list-item"><div class="num">B</div><div><h4>想动脑时</h4><p>《长夜灯火》《夜航船》信息密度较高，建议连续观看并留意细节伏笔。</p><div class="src">分类：悬疑 · 科幻</div></div></div>
+        <div class="list-item"><div class="num">C</div><div><h4>想安静时</h4><p>《河流纪事》《手艺档案》以观察记录为主，画面与旁白都保持平缓。</p><div class="src">分类：纪录片</div></div></div>
+      </div>
+
+      <div class="tab-panel" id="t3">
+        <div class="list-item"><div class="num">新</div><div><h4>近期入库条目</h4><p>片库网持续补充新条目，新增内容会同步进入对应分类，可在分类页按入库时间排序查看。</p><div class="src">更新范围：全部类型</div></div></div>
+        <div class="list-item"><div class="num">补</div><div><h4>条目信息补全</h4><p>新入库条目会补齐简介、年份、地区与类型标签，方便与已有片库内容一起筛选。</p><div class="src">维护内容：简介与标签</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guide -->
+  <section class="block" id="guide">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>怎样使用片库网</h2>
+        <p>从进入片库到定位条目，通常只需三步。熟悉筛选逻辑后，查找效率会明显提升。</p>
+      </div>
+      <div class="list-item"><div class="num">1</div><div><h4>先定大类</h4><p>在片库分类区选择电影、电视剧、动漫或纪录片，先缩小范围，再进入细分类型。</p><div class="src">对应位置：片库分类浏览</div></div></div>
+      <div class="list-item"><div class="num">2</div><div><h4>再叠加条件</h4><p>类型与关键词可同时使用，例如输入“悬疑”并选择电视剧，结果只保留同时满足的条目。</p><div class="src">对应位置：检索框与类型筛选条</div></div></div>
+      <div class="list-item"><div class="num">3</div><div><h4>最后看条目</h4><p>打开条目可查看简介、年份、地区与类型标签，再决定是否加入待看清单。</p><div class="src">对应位置：分类卡片</div></div></div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="block" id="about">
+    <div class="wrap">
+      <div class="about">
+        <div>
+          <h2>关于片库网</h2>
+          <p>片库网是一个以分类浏览为核心的影视片库页面，重点放在条目的整理与检索上，而不是单一推荐位。页面把电影、电视剧、动漫与纪录片放在同一套筛选逻辑里，用户可以按类型、年份与关键词逐步收窄范围。</p>
+          <p>片库条目信息以简介、年份、地区与类型标签为主，尽量保持简洁一致，便于横向比较。片库网不会对内容作过度解读，条目描述只说明题材与叙事特点，是否适合观看仍由用户判断。</p>
+          <p>如果一时没有明确目标，可以先从专题列表入手，再回到分类区按条件筛选。片库网希望把“找片”这件事变得有路径可循：先定大类，再叠加条件，最后看条目详情。</p>
+        </div>
+        <aside class="side">
+          <h3>片库使用要点</h3>
+          <ul>
+            <li>类型筛选与关键词检索可叠加</li>
+            <li>条目信息包含年份、地区与标签</li>
+            <li>专题列表按观看场景归类</li>
+            <li>新条目入库后进入对应分类</li>
+            <li>检索无结果时会提示更换条件</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download -->
+  <section class="block" id="download-area" style="padding-top:0;">
+    <div class="wrap">
+      <div class="download">
+        <div>
+          <h3>片库网客户端</h3>
+          <p>客户端用于在桌面端浏览片库分类与条目信息，下载入口将在版本就绪后开放，当前页面仅作占位展示。</p>
+        </div>
+        <a class="btn-dl" href="#" data-download-placeholder="true" aria-disabled="true" tabindex="-1">下载</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <svg width="26" height="26" viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#0f1626"/>
+          <rect x="10" y="16" width="44" height="32" rx="5" fill="none" stroke="#f5b544" stroke-width="3"/>
+          <path d="M22 16v32M42 16v32M10 26h44M10 38h44" stroke="#f5b544" stroke-width="2.2"/>
+        </svg>
+        片库网
+      </div>
+      <div class="foot-links">
+        <a href="#library">片库分类</a>
+        <a href="#picks">精选推荐</a>
+        <a href="#guide">浏览方式</a>
+        <a href="#about">关于片库</a>
+        <a href="#download-area">客户端</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      片库网 · 在线影视片库分类浏览页面。条目信息仅作片库分类与简介展示，内容以页面实际收录为准。
+    </div>
+  </div>
+</footer>
+
+<script>
+  // 分类筛选
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('#cards .card');
+  var empty = document.getElementById('empty');
+  var qInput = document.getElementById('q');
+  var currentCat = 'all';
+
+  function applyFilter(){
+    var kw = (qInput.value || '').trim().toLowerCase();
+    var visible = 0;
+    cards.forEach(function(card){
+      var cat = card.getAttribute('data-cat');
+      var key = (card.getAttribute('data-key') || '').toLowerCase();
+      var name = card.querySelector('h3').textContent.toLowerCase();
+      var okCat = currentCat === 'all' || cat === currentCat;
+      var okKw = !kw || key.indexOf(kw) > -1 || name.indexOf(kw) > -1;
+      if(okCat && okKw){ card.style.display=''; visible++; }
+      else{ card.style.display='none'; }
+    });
+    empty.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  chips.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      chips.forEach(function(b){ b.classList.remove('active'); });
+      btn.classList.add('active');
+      currentCat = btn.getAttribute('data-cat');
+      applyFilter();
+    });
+  });
+
+  document.getElementById('qbtn').addEventListener('click', applyFilter);
+  qInput.addEventListener('input', applyFilter);
+
+  // 专题切换
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.remove('active'); });
+      var id = tab.getAttribute('data-tab');
+      var panel = document.getElementById(id);
+      if(panel){ panel.classList.add('active'); }
+    });
+  });
+</script>
+
+</body>
+  </html>
